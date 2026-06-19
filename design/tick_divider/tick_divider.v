@@ -1,4 +1,4 @@
-module tick_divider #(parameter TICK_DIV = 3)(input clk,
+module tick_divider #(parameter TICK_DIV = 6)(input clk,
                                               input rst,
                                               output reg tick_en
                                              );

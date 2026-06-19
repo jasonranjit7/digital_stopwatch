@@ -1,19 +1,18 @@
 `include "tick_divider/tick_divider.v"
 //set divider parameter to 5x10^7 to make clock period 1s for fpga board of freq 50MHz
-module digital_stopwatch #(parameter TICK_DIV = 4)(input clk,
-                 input rst, tick_rst,
+module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
+                 input rst, 
+                 input tick_rst,	
                  input start_stop,
                  input lap,
                  input clear,
-                 output reg running,
-                 output reg lap_active,
-                 output reg [15:0] time_count,
-                 output reg [15:0] lap_count,
-                 output reg [1:0] state_dbg
+                 output reg [15:0] time_count
                 );
 
- wire tick_en;
+  wire tick_en;
   
+  reg [15:0] time_c;
+  reg [15:0] lap_c;
 
   tick_divider #(.TICK_DIV(TICK_DIV)) tdr(.clk(clk),
                                           .rst(tick_rst),
@@ -71,46 +70,37 @@ module digital_stopwatch #(parameter TICK_DIV = 4)(input clk,
     endcase
   end
   
+  
   //counter
   always@(posedge tick_en) begin
     if(rst| clear) begin
-      time_count <= 16'd0;
-      lap_count <= 16'd0;
+      time_c <= 16'd0;
+      lap_c <= 16'd0;
     end
     else begin
       if(state == S_RUNNING && nxt_state == S_LAP_HELD) begin
-      	lap_count <= time_count + 1;
+      	lap_c <= time_c + 1;
       end
-      if(state == S_RUNNING || nxt_state == S_LAP_HELD)
-      	time_count <= time_count + 1;
+      if(state == S_RUNNING || state == S_LAP_HELD)
+      	time_c <= time_c + 1;
     end
   end
   
   //output logic
   always@(*) begin
-    state_dbg = 2'b11; //invalid state
-    running = 0;
-    lap_active = 0;
+    time_count = time_c;
     case(state)
       S_STOPPED: begin
-        state_dbg = S_STOPPED;
-        running = 0;
-        lap_active = 0;
+        time_count = 0;
       end
       S_RUNNING: begin
-        state_dbg = S_RUNNING;
-        running = 1;
-        lap_active = 0;
+        time_count = time_c;
       end
       S_LAP_HELD: begin
-        state_dbg = S_LAP_HELD;
-        running = 1;
-        lap_active = 1;
+        time_count = lap_c;
       end
       default: begin
-        state_dbg = 2'b11; //invalid state
-        running = 0;
-        lap_active = 0;
+        time_count = time_c;
       end
     endcase
   end

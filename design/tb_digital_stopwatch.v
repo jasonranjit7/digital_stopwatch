@@ -1,8 +1,6 @@
 module digital_stopwatch_tb #(parameter TICK_DIV = 2)();
   reg clk,rst,tick_rst,start_stop,lap,clear;
-  wire running, lap_active;
-  wire [15:0] time_count, lap_count;
-  wire [1:0] state_dbg;
+  wire [15:0] time_count;
   
   
   //DUT instantiation
@@ -12,11 +10,7 @@ module digital_stopwatch_tb #(parameter TICK_DIV = 2)();
                 .start_stop(start_stop),
                 .lap(lap),
                 .clear(clear),
-                .running(running),
-                .lap_active(lap_active),
-                .time_count(time_count),
-                .lap_count(lap_count),
-                .state_dbg(state_dbg)
+                .time_count(time_count)
                );
   
   wire tick = DUT.tick_en;
@@ -74,23 +68,23 @@ module digital_stopwatch_tb #(parameter TICK_DIV = 2)();
   task test_start;
     begin
       start();
-      if(state_dbg == 2'b01)
+      if(DUT.state == 2'b01)
         $display("Inside running state");
       wait_ticks(5);
       lapping();
-      if(state_dbg == 2'b10)
+      if(DUT.state == 2'b10)
         $display("Inside lap mode");
       wait_ticks(11);
       lapping();
-      if(state_dbg == 2'b01)
+      if(DUT.state == 2'b01)
         $display("Inside running state");
       wait_ticks(8);
       lapping();
-      if(state_dbg == 2'b10)
+      if(DUT.state == 2'b10)
         $display("Inside lap mode");
       wait_ticks(11);
       clearing();
-      if(state_dbg == 2'b00)
+      if(DUT.state == 2'b00)
         $display("Inside idle state");
       wait_ticks(5);
     end
@@ -100,13 +94,15 @@ module digital_stopwatch_tb #(parameter TICK_DIV = 2)();
     $dumpfile("stopwatch.vcd");
     $dumpvars(0,digital_stopwatch_tb.DUT);
     
-    $monitor("running = %b, state = %d, lap_count = %b, time_count = %0d",DUT.running, state_dbg, lap_count, time_count);
+    $monitor("state = %d, time_count = %0d", DUT.state, time_count);
     
     wait_ticks(5);
     tick_rst = 0;
     wait_ticks(10);
     rst = 0;
     wait_ticks(10);
+    test_start();
+    wait_ticks(5);
     test_start();
     wait_ticks(5);
     $finish();
