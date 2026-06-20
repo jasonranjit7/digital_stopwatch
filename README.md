@@ -1,6 +1,6 @@
 # digital_stopwatch
 
-A small Verilog digital stopwatch: an FSM-driven counter with start/stop, lap-hold, and clear control, built around a parameterized clock divider so it can run from a 50 MHz FPGA clock or a fast simulation clock.
+A Verilog digital stopwatch with an FSM-driven counter with start/stop, lap-hold, and clear control, built around a parameterized clock divider so it can run from a 50 MHz FPGA clock or a fast simulation clock.
 
 ## Repository structure
 
