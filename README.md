@@ -71,7 +71,7 @@ All 65 registers are clock-enabled synchronous resets (FDRE) — no latches infe
 
 **Timing (post-route)**
 
-The XDC defines only pin assignments and a `create_clock` constraint (`-period 20.000`, 50 MHz). No I/O delay constraints are specified, so Vivado reports WNS = `inf` with 0 failing endpoints across 171 analyzed paths — all internal register-to-register paths close comfortably within the 20 ns clock period.
+The XDC defines only pin assignments, no create clock constraint. No I/O delay constraints are specified, so Vivado reports WNS = `inf` with 0 failing endpoints across 171 analyzed paths — all internal register-to-register paths close comfortably within the 20 ns clock period.
 
 **Power (post-route)**
 | Component | Power (W) |
