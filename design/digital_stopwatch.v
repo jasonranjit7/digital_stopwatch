@@ -1,8 +1,7 @@
-`include "tick_divider/tick_divider.v"
-//set divider parameter to 5x10^7 to make clock period 1s for fpga board of freq 50MHz
+`include "tick_divider.v"
+
 module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
-                 input rst, 
-                 input tick_rst,	
+                 input rst, tick_rst,	
                  input start_stop,
                  input lap,
                  input clear,
@@ -14,6 +13,20 @@ module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
   reg [15:0] time_c;
   reg [15:0] lap_c;
 
+  
+  reg start_stop_d, lap_d, clear_d;
+  
+  //button pulses at tick_en
+  always @(posedge clk) begin
+    start_stop_d <= start_stop;
+    lap_d  <= lap;
+    clear_d <= clear;
+  end
+  
+  wire start_stop_pulse = start_stop & ~start_stop_d;
+  wire lap_pulse = lap & ~lap_d;
+  wire clear_pulse = clear & ~clear_d; 
+  
   tick_divider #(.TICK_DIV(TICK_DIV)) tdr(.clk(clk),
                                           .rst(tick_rst),
                                           .tick_en(tick_en)
@@ -26,7 +39,7 @@ module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
   				   S_LAP_HELD = 2'b10;
   
   //state transition
-  always@(posedge tick_en) begin
+  always@(posedge clk) begin
     if(rst)
       state <= S_STOPPED;
     else
@@ -38,7 +51,7 @@ module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
     case(state)
       S_STOPPED: 
         begin
-          if(start_stop)
+          if(start_stop_pulse)
             nxt_state = S_RUNNING;
           else
             nxt_state = S_STOPPED;
@@ -46,9 +59,9 @@ module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
       
       S_RUNNING: 
         begin
-          if(start_stop | clear)
+          if(start_stop_pulse | clear_pulse)
             nxt_state = S_STOPPED;
-          else if(lap)
+          else if(lap_pulse)
             nxt_state = S_LAP_HELD;
           else
             nxt_state = S_RUNNING;
@@ -56,9 +69,9 @@ module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
       
       S_LAP_HELD:
         begin
-          if(start_stop|clear)
+          if(start_stop_pulse|clear_pulse)
             nxt_state = S_STOPPED;
-          else if(lap)
+          else if(lap_pulse)
             nxt_state = S_RUNNING;
           else
             nxt_state = S_LAP_HELD;
@@ -72,16 +85,16 @@ module digital_stopwatch #(parameter TICK_DIV = 50000000)(input clk,
   
   
   //counter
-  always@(posedge tick_en) begin
-    if(rst| clear) begin
+  always@(posedge clk) begin
+    if(rst| clear_pulse) begin
       time_c <= 16'd0;
       lap_c <= 16'd0;
     end
     else begin
       if(state == S_RUNNING && nxt_state == S_LAP_HELD) begin
-      	lap_c <= time_c + 1;
+      	lap_c <= time_c;
       end
-      if(state == S_RUNNING || state == S_LAP_HELD)
+      if(tick_en && (state == S_RUNNING || state == S_LAP_HELD))
       	time_c <= time_c + 1;
     end
   end

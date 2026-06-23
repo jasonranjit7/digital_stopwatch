@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2025.2 (win64) Build 6299465 Fri Nov 14 19:35:11 GMT 2025
-| Date             : Fri Jun 19 13:50:03 2026
+| Date             : Tue Jun 23 13:39:22 2026
 | Host             : JASON-G14 running 64-bit major release  (build 9200)
 | Command          : report_power -file digital_stopwatch_power_routed.rpt -pb digital_stopwatch_power_summary_routed.pb -rpx digital_stopwatch_power_routed.rpx
 | Design           : digital_stopwatch
@@ -30,14 +30,14 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 0.073        |
+| Total On-Chip Power (W)  | 2.385        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.002        |
-| Device Static (W)        | 0.072        |
+| Dynamic (W)              | 2.307        |
+| Device Static (W)        | 0.078        |
 | Effective TJA (C/W)      | 4.9          |
-| Max Ambient (C)          | 84.6         |
-| Junction Temperature (C) | 25.4         |
+| Max Ambient (C)          | 73.4         |
+| Junction Temperature (C) | 36.6         |
 | Confidence Level         | Low          |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,17 +52,16 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
-| Clocks         |    <0.001 |        3 |       --- |             --- |
-| Slice Logic    |    <0.001 |      114 |       --- |             --- |
-|   LUT as Logic |    <0.001 |       31 |     20800 |            0.15 |
-|   CARRY4       |    <0.001 |       15 |      8150 |            0.18 |
-|   Register     |    <0.001 |       61 |     41600 |            0.15 |
-|   BUFG         |    <0.001 |        1 |        32 |            3.13 |
+| Slice Logic    |     0.106 |      116 |       --- |             --- |
+|   LUT as Logic |     0.059 |       33 |     20800 |            0.16 |
+|   CARRY4       |     0.027 |       11 |      8150 |            0.13 |
+|   Register     |     0.015 |       65 |     41600 |            0.16 |
+|   BUFG         |     0.006 |        1 |        32 |            3.13 |
 |   Others       |     0.000 |        4 |       --- |             --- |
-| Signals        |    <0.001 |      106 |       --- |             --- |
-| I/O            |     0.001 |       22 |       170 |           12.94 |
-| Static Power   |     0.072 |          |           |                 |
-| Total          |     0.073 |          |           |                 |
+| Signals        |     0.181 |      110 |       --- |             --- |
+| I/O            |     2.020 |       22 |       170 |           12.94 |
+| Static Power   |     0.078 |          |           |                 |
+| Total          |     2.385 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -72,9 +71,9 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint    |       1.000 |     0.010 |       0.001 |      0.010 |       NA    | Unspecified | NA         |
-| Vccaux    |       1.800 |     0.013 |       0.000 |      0.013 |       NA    | Unspecified | NA         |
-| Vcco33    |       3.300 |     0.001 |       0.000 |      0.001 |       NA    | Unspecified | NA         |
+| Vccint    |       1.000 |     0.326 |       0.311 |      0.015 |       NA    | Unspecified | NA         |
+| Vccaux    |       1.800 |     0.086 |       0.073 |      0.013 |       NA    | Unspecified | NA         |
+| Vcco33    |       3.300 |     0.566 |       0.565 |      0.001 |       NA    | Unspecified | NA         |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco18    |       1.800 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -128,8 +127,6 @@ Table of Contents
 +-------+--------+-----------------+
 | Clock | Domain | Constraint (ns) |
 +-------+--------+-----------------+
-| clk   | clk    |            20.0 |
-+-------+--------+-----------------+
 
 
 3. Detailed Reports
@@ -141,7 +138,8 @@ Table of Contents
 +-------------------+-----------+
 | Name              | Power (W) |
 +-------------------+-----------+
-| digital_stopwatch |     0.002 |
+| digital_stopwatch |     2.307 |
+|   tdr             |     0.106 |
 +-------------------+-----------+
 
 

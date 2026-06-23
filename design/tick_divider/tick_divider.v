@@ -1,4 +1,4 @@
-module tick_divider #(parameter TICK_DIV = 6)(input clk,
+module tick_divider #(parameter TICK_DIV = 3)(input clk,
                                               input rst,
                                               output reg tick_en
                                              );
@@ -8,15 +8,14 @@ module tick_divider #(parameter TICK_DIV = 6)(input clk,
   always@(posedge clk) begin
     if(rst) begin
       count <= 0;
-      tick_en <= 0;
+      tick_en<=0;
     end
     else if(count == TICK_DIV-1) begin
       count <= 0;
-      tick_en <= 1'b1;
+      tick_en <= ~tick_en;
     end
     else begin
       count <= count + 1;
-      tick_en <= 1'b0;
     end
   end
   
