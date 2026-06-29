@@ -67,8 +67,6 @@ The design was synthesized and implemented in Vivado v2025.2 for a Xilinx Artix-
 | Block RAM | 0 | 50 | 0.00% |
 | DSPs | 0 | 90 | 0.00% |
 
-All 65 registers are clock-enabled synchronous resets (FDRE) — no latches inferred.
-
 **Timing (post-route)**
 
 The XDC defines only pin assignments, no create clock constraint. No I/O delay constraints are specified, so Vivado reports WNS = `inf` with 0 failing endpoints across 171 analyzed paths — all internal register-to-register paths close comfortably within the 20 ns clock period.
